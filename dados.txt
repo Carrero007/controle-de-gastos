@@ -1,0 +1,13 @@
+{
+  "saldo": 317.89,
+  "lancamentos": [
+    {
+      "id": "1765125831770m9d6xwsq7",
+      "tipo": "gasto",
+      "valor": 10,
+      "categoria": "Alimentação",
+      "descricao": "Gatorade dps do jogo",
+      "data": "2025-12-07"
+    }
+  ]
+}

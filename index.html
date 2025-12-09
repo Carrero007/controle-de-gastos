@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema de Controle de Gastos Pessoais">
+  <title>Controle de Gastos</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  
+  <!-- Container Principal -->
+  <div class="container">
+    
+    <!-- Cabeçalho -->
+    <header class="header">
+      <h1>💰 Controle de Gastos</h1>
+      <div class="theme-selector">
+        <label for="tema-select">Tema:</label>
+        <select id="tema-select" aria-label="Seletor de tema de cores">
+          <option value="tema1">Tema 1 (Verde Água)</option>
+          <option value="tema2">Tema 2 (Rosa)</option>
+          <option value="tema3">Tema 3 (Amarelo)</option>
+        </select>
+      </div>
+    </header>
+    
+    <!-- Painel de Saldo -->
+    <section class="saldo-painel">
+      <div class="saldo-card">
+        <h2>Saldo Atual</h2>
+        <p class="saldo-valor" id="saldo-atual">R$ 0,00</p>
+        <div class="saldo-form">
+          <label for="input-saldo">Definir Saldo Inicial:</label>
+          <div class="input-group">
+            <input 
+              type="number" 
+              id="input-saldo" 
+              placeholder="0.00" 
+              step="0.01"
+              aria-label="Valor do saldo inicial"
+            >
+            <button id="btn-atualizar-saldo" class="btn btn-primary">Atualizar</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Cards de Resumo -->
+      <div class="resumo-cards">
+        <div class="resumo-card">
+          <h3>Gasto Hoje</h3>
+          <p id="gasto-hoje">R$ 0,00</p>
+        </div>
+        <div class="resumo-card">
+          <h3>Gasto Mês</h3>
+          <p id="gasto-mes">R$ 0,00</p>
+        </div>
+        <div class="resumo-card">
+          <h3>Gasto Ano</h3>
+          <p id="gasto-ano">R$ 0,00</p>
+        </div>
+        <div class="resumo-card">
+          <h3>Receitas</h3>
+          <p id="total-receitas">R$ 0,00</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Formulário de Lançamento -->
+    <section class="lancamento-form">
+      <h2>Novo Lançamento</h2>
+      <form id="form-lancamento">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tipo">Tipo *</label>
+            <select id="tipo" required aria-label="Tipo de lançamento">
+              <option value="gasto">Gasto</option>
+              <option value="receita">Receita</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="valor">Valor (R$) *</label>
+            <input 
+              type="number" 
+              id="valor" 
+              step="0.01" 
+              min="0.01" 
+              required
+              placeholder="0.00"
+              aria-label="Valor do lançamento"
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="categoria">Categoria *</label>
+            <select id="categoria" required aria-label="Categoria do lançamento">
+              <option value="Alimentação">Alimentação</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Moradia">Moradia</option>
+              <option value="Lazer">Lazer</option>
+              <option value="Saúde">Saúde</option>
+              <option value="Educação">Educação</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="data">Data *</label>
+            <input 
+              type="date" 
+              id="data" 
+              required
+              aria-label="Data do lançamento"
+            >
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="descricao">Descrição (opcional)</label>
+          <input 
+            type="text" 
+            id="descricao" 
+            placeholder="Ex: Almoço no restaurante"
+            aria-label="Descrição do lançamento"
+          >
+        </div>
+        
+        <input type="hidden" id="lancamento-id">
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="btn-salvar">Adicionar</button>
+          <button type="button" class="btn btn-secondary" id="btn-cancelar" style="display:none;">Cancelar</button>
+        </div>
+      </form>
+    </section>
+    
+    <!-- Filtros e Exportação -->
+    <section class="filtros">
+      <h2>Filtros e Relatórios</h2>
+      <div class="filtros-group">
+        <div class="form-group">
+          <label for="filtro-mes">Mês:</label>
+          <input type="month" id="filtro-mes" aria-label="Filtrar por mês">
+        </div>
+        
+        <div class="form-group">
+          <label for="filtro-ano">Ano:</label>
+          <input type="number" id="filtro-ano" min="2000" max="2100" placeholder="2025" aria-label="Filtrar por ano">
+        </div>
+        
+        <button class="btn btn-secondary" id="btn-aplicar-filtros">Aplicar Filtros</button>
+        <button class="btn btn-accent" id="btn-exportar-csv">📥 Exportar CSV</button>
+      </div>
+    </section>
+    
+    <!-- Gráficos -->
+    <section class="graficos">
+      <h2>Visualizações</h2>
+      <div class="graficos-container">
+        <div class="grafico-card">
+          <h3>Gastos por Dia (Mês Selecionado)</h3>
+          <canvas id="grafico-dias"></canvas>
+        </div>
+        <div class="grafico-card">
+          <h3>Distribuição por Categoria</h3>
+          <canvas id="grafico-categorias"></canvas>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Lista de Lançamentos -->
+    <section class="lancamentos-lista">
+      <h2>Lançamentos</h2>
+      <div id="lista-container">
+        <p class="lista-vazia">Nenhum lançamento cadastrado.</p>
+      </div>
+    </section>
+    
+  </div>
+  
+  <!-- Toast de Notificações -->
+  <div id="toast" class="toast"></div>
+  
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+  
+</body>
+</html>

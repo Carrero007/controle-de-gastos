@@ -1,0 +1,15 @@
+{
+  "name": "controle-gastos",
+  "version": "1.0.0",
+  "description": "Sistema de Controle de Gastos com Node.js e Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["gastos", "financeiro", "controle"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
